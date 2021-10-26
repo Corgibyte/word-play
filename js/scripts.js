@@ -1,22 +1,28 @@
+function output(outputWord, outputCount) {
+  $("#output").append("<li>" + outputWord + ": " + outputCount + "</li>");
+}
+
 $(document).ready(function() {
   $("#form").submit(function(event) {
     event.preventDefault();
-    //Array from sentence
-    const origSentenceStr = $("#sentence").val();
-    const origSentenceArr = origSentenceStr.split(" ");
+    
+    let origSentenceStr = $("#sentence").val();
+    origSentenceStr = origSentenceStr.toLowerCase();
+    let origSentenceArr = origSentenceStr.split(" ");
+    origSentenceArr.sort();
 
-    //Loop through, and create new array from words of 3+ length
-    let newSentence = [];
+    let lastCount = 0;
+    let lastWord = "";
     origSentenceArr.forEach(function(word) {
-      if (word.length > 2) {
-        newSentence.push(word);
-      }
+      if (word === lastWord) {
+        lastCount += 1;
+      } else {
+        if (lastWord !== "") {
+          output(lastWord, lastCount);
+        }
+        lastWord = word;
+        lastCount = 1;        
+      }              
     });
-
-    //Reverse new array, join together, display
-    newSentence.reverse();
-    const newSentenceStr = newSentence.join(" ");
-
-    $("#output").append(newSentenceStr);
   });
 });
